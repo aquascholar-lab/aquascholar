@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>No-Cost EMI & GST Breakdown Calculator</title>
+  <link rel="stylesheet" href="emi-calculator.css">
+<link rel="stylesheet" href="migration.css"></head>
+<body class="bg-slate-950 text-slate-100 min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-sans">
+<a class="aquascholar-return" href="../index.html#webtools">← Aquascholar tools</a>
+  <div class="max-w-6xl mx-auto space-y-8">
+    
+    <div class="border-b border-slate-800 pb-5">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+        No-Cost EMI & GST Calculator
+      </h1>
+      <p class="text-slate-400 text-sm mt-1">
+        Reconciles merchant discount, monthly amortized interest, bank issuer processing charges, and 9% CGST + 9% SGST.
+      </p>
+    </div>
+
+    <!-- Inputs -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="productPrice">Product MRP (₹)</label>
+        <input id="productPrice" type="number" value="100144" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="bookedPrincipal">Booked Loan Principal (₹)</label>
+        <input id="bookedPrincipal" type="number" step="0.01" value="91991.34" placeholder="Optional Override" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="tenure">Tenure</label>
+        <select id="tenure" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono">
+          <option value="3">3 Months</option>
+          <option value="6">6 Months</option>
+          <option value="9">9 Months</option>
+          <option value="12" selected>12 Months</option>
+          <option value="18">18 Months</option>
+          <option value="24">24 Months</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="interestRate">Bank Rate (% p.a.)</label>
+        <input id="interestRate" type="number" step="0.01" value="15.99" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="processingFee">Processing Fee (₹)</label>
+        <input id="processingFee" type="number" value="299" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
+      </div>
+
+      <div class="sm:col-span-2 lg:col-span-5 mt-2">
+        <button onclick="calculateSchedule()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-xl transition-all">
+          Calculate Schedule
+        </button>
+      </div>
+    </div>
+
+    <!-- Metric Cards -->
+    <div id="summaryCards" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+
+    <!-- Table -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-900">
+        <h2 class="text-base font-semibold text-white tracking-wide">Monthly Amortization Schedule</h2>
+        <span class="text-xs text-slate-400">All amounts in INR (₹)</span>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse font-mono text-xs sm:text-sm">
+          <thead>
+            <tr class="text-slate-400 border-b border-slate-800 bg-slate-950 uppercase text-[11px] tracking-wider">
+              <th class="py-3.5 px-4 font-semibold">Month</th>
+              <th class="py-3.5 px-4 font-semibold">Principal</th>
+              <th class="py-3.5 px-4 font-semibold">Interest</th>
+              <th class="py-3.5 px-4 font-semibold text-indigo-300">CGST (9%)</th>
+              <th class="py-3.5 px-4 font-semibold text-indigo-300">SGST (9%)</th>
+              <th class="py-3.5 px-4 font-semibold">One-Time Fee</th>
+              <th class="py-3.5 px-4 font-semibold text-right">Total Outflow</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody" class="divide-y divide-slate-800 text-slate-300"></tbody>
+          <tfoot id="scheduleFoot" class="bg-slate-950 text-white font-bold border-t-2 border-slate-700"></tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function roundToTwo(num) {
+      return Math.round((num + Number.EPSILON) * 100) / 100;
+    }
+
+    function formatINR(val) {
+      return '₹' + val.toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function calculateSchedule() {
+      const price = parseFloat(document.getElementById('productPrice').value) || 0;
+      const explicitPrincipal = parseFloat(document.getElementById('bookedPrincipal').value);
+      const tenure = parseInt(document.getElementById('tenure').value) || 12;
+      const annualRate = parseFloat(document.getElementById('interestRate').value) || 15.99;
+      const baseFee = parseFloat(document.getElementById('processingFee').value) || 0;
+
+      const monthlyRate = (annualRate / 100) / 12;
+
+      let initialPrincipal;
+      let monthlyBaseEMI;
+
+      if (!isNaN(explicitPrincipal) && explicitPrincipal > 0) {
+        initialPrincipal = explicitPrincipal;
+        // Standard amortization annuity payment formula
+        const factor = Math.pow(1 + monthlyRate, tenure);
+        monthlyBaseEMI = roundToTwo(initialPrincipal * (monthlyRate * factor) / (factor - 1));
+      } else {
+        monthlyBaseEMI = roundToTwo(price / tenure);
+        initialPrincipal = roundToTwo(monthlyBaseEMI * ((1 - Math.pow(1 + monthlyRate, -tenure)) / monthlyRate));
+      }
+
+      const upfrontDiscount = roundToTwo(price - initialPrincipal);
+
+      const feeCgst = roundToTwo(baseFee * 0.09);
+      const feeSgst = roundToTwo(baseFee * 0.09);
+      const totalFeeWithTax = roundToTwo(baseFee + feeCgst + feeSgst);
+
+      let remainingPrincipal = initialPrincipal;
+      let totalInterest = 0;
+      let totalCgst = 0;
+      let totalSgst = 0;
+      let totalPaid = 0;
+      let totalPrincipalPaid = 0;
+
+      const tableBody = document.getElementById('scheduleBody');
+      tableBody.innerHTML = '';
+
+      for (let month = 1; month <= tenure; month++) {
+        let monthlyInterest = roundToTwo(remainingPrincipal * monthlyRate);
+        let monthlyPrincipal;
+
+        if (month === tenure) {
+          monthlyPrincipal = roundToTwo(remainingPrincipal);
+        } else {
+          monthlyPrincipal = roundToTwo(monthlyBaseEMI - monthlyInterest);
+        }
+
+        const interestCgst = roundToTwo(monthlyInterest * 0.09);
+        const interestSgst = roundToTwo(monthlyInterest * 0.09);
+
+        const feePortion = (month === 1) ? totalFeeWithTax : 0;
+        const totalMonthlyOutflow = roundToTwo(monthlyPrincipal + monthlyInterest + interestCgst + interestSgst + feePortion);
+
+        remainingPrincipal = roundToTwo(remainingPrincipal - monthlyPrincipal);
+        totalInterest = roundToTwo(totalInterest + monthlyInterest);
+        totalCgst = roundToTwo(totalCgst + interestCgst + (month === 1 ? feeCgst : 0));
+        totalSgst = roundToTwo(totalSgst + interestSgst + (month === 1 ? feeSgst : 0));
+        totalPrincipalPaid = roundToTwo(totalPrincipalPaid + monthlyPrincipal);
+        totalPaid = roundToTwo(totalPaid + totalMonthlyOutflow);
+
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-slate-800/40 transition-colors';
+        row.innerHTML = `
+          <td class="py-3.5 px-4 font-sans font-medium text-slate-200">Month ${month}</td>
+          <td class="py-3.5 px-4">${formatINR(monthlyPrincipal)}</td>
+          <td class="py-3.5 px-4 text-amber-300/90">${formatINR(monthlyInterest)}</td>
+          <td class="py-3.5 px-4 text-indigo-300">${formatINR(interestCgst)}</td>
+          <td class="py-3.5 px-4 text-indigo-300">${formatINR(interestSgst)}</td>
+          <td class="py-3.5 px-4 text-slate-400">${month === 1 ? `${formatINR(totalFeeWithTax)} <span class="text-[10px] text-slate-500 block font-sans">(${formatINR(baseFee)} + 18% GST)</span>` : '₹0.00'}</td>
+          <td class="py-3.5 px-4 text-right font-semibold text-white">${formatINR(totalMonthlyOutflow)}</td>
+        `;
+        tableBody.appendChild(row);
+      }
+
+      document.getElementById('scheduleFoot').innerHTML = `
+        <tr>
+          <td class="py-4 px-4 font-sans text-slate-300 uppercase tracking-wider text-xs">Totals</td>
+          <td class="py-4 px-4">${formatINR(totalPrincipalPaid)}</td>
+          <td class="py-4 px-4 text-amber-300">${formatINR(totalInterest)}</td>
+          <td class="py-4 px-4 text-indigo-300">${formatINR(totalCgst)}</td>
+          <td class="py-4 px-4 text-indigo-300">${formatINR(totalSgst)}</td>
+          <td class="py-4 px-4">${formatINR(totalFeeWithTax)}</td>
+          <td class="py-4 px-4 text-right text-emerald-400 text-base">${formatINR(totalPaid)}</td>
+        </tr>
+      `;
+
+      const extraOutOfPocket = roundToTwo(totalPaid - price);
+      document.getElementById('summaryCards').innerHTML = `
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Upfront Discount</p>
+          <p class="text-xl font-bold text-emerald-400 mt-1 font-mono">${formatINR(upfrontDiscount)}</p>
+          <span class="text-[11px] text-slate-500 mt-0.5 block">Amazon Instant Rebate</span>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Booked Loan Principal</p>
+          <p class="text-xl font-bold text-white mt-1 font-mono">${formatINR(initialPrincipal)}</p>
+          <span class="text-[11px] text-slate-500 mt-0.5 block">Initial Loan Balance</span>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Taxes (CGST + SGST)</p>
+          <p class="text-xl font-bold text-amber-400 mt-1 font-mono">${formatINR(totalCgst + totalSgst)}</p>
+          <span class="text-[11px] text-slate-500 mt-0.5 block">Interest & Processing Tax</span>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Extra Out-of-Pocket</p>
+          <p class="text-xl font-bold text-rose-400 mt-1 font-mono">${formatINR(extraOutOfPocket)}</p>
+          <span class="text-[11px] text-slate-500 mt-0.5 block">Total Paid Over MRP</span>
+        </div>
+      `;
+    }
+
+    window.addEventListener('DOMContentLoaded', calculateSchedule);
+  </script>
+</body>
+</html>

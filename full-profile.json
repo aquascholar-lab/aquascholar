@@ -1,0 +1,62 @@
+{
+  "research": [
+    "Snow Cover Monitoring and Modelling",
+    "Climate Change Impact Assessment",
+    "Remote Sensing and GIS Applications in Water Resources",
+    "Google Earth Engine and Cloud-Based Geospatial Analytics",
+    "Flood, Flash Flood and GLOF Hazard Assessment",
+    "Landslide Susceptibility and Risk Modelling",
+    "Hydrological and Hydraulic Modelling (HEC-HMS, HEC-RAS)",
+    "Machine Learning Applications in Earth Sciences",
+    "Water Resources Planning and Management"
+  ],
+  "projects": [
+    "PI - Development of a User-Friendly Web-Portal for Integrated Snow Cover and Meteorological Analysis with Land Use Change Detection Using Google Earth Engine, Research Project, Duration: 24 months, Funding: >10 lakhs, Sponsored by: National Institute of Hydrology, Outcome: Web-Based Decision Support Portal (Completed).",
+    "Co-PI - Comprehensive Mapping of Water Budget Dynamics and Reservoir Sedimentation in the Upper Krishna Basin using Google Earth Engine, Research Project, Duration: 24 months, Funding: >10 lakhs, Sponsored by: National Institute of Hydrology, Outcome: Product (Completed).",
+    "Co-PI - Site Suitability Mapping for Rainwater Harvesting and Spring Rejuvenation in the Tawi Basin, Research Project, Duration: 24 months, Funding: >10 lakhs, Sponsored by: National Institute of Hydrology, Outcome: Decision Support System and Thematic Maps (Completed).",
+    "Co-I - Mass Balance of Phuche and Khardung Glaciers, Ladakh Range with Implications for Downstream Water Availability under Changing Climate, Research Project, Duration: 24 months, Funding: >10 lakhs, Sponsored by: National Institute of Hydrology, Outcome: Technical Report and Glacier Mass Balance Dataset (Completed).",
+    "Co-PI - Understanding Cryospheric Processes in Response to Climate Change and Atmospheric Pollutants: A Case Study of Jhelum Basin, Kashmir Himalaya, India, Research Project, Duration: 24 months, Funding: >10 lakhs, Sponsored by: National Institute of Hydrology, Outcome: Cryosphere Monitoring Framework and Scientific Database (Ongoing).",
+    "Co-PI - Basin Scale Inventorying of Rock Glaciers for Hydrological Storage Estimation and Hazard Vulnerability Assessment, Research Project, Duration: 24 months, Funding: >10 lakhs, Sponsored by: National Institute of Hydrology, Outcome: Rock Glacier Inventory and Hazard Assessment Database (Ongoing).",
+    "Co-PI - Glacial and Landslide Lake Outburst Flood (G/LLOF) Studies in Veshaw Catchment of Jhelum River Basin, Kashmir Himalaya, Research Project, Duration: 24 months, Funding: >10 lakhs, Sponsored by: National Institute of Hydrology, Outcome: Hazard Assessment Maps and Technical Report (Ongoing).",
+    "Co-PI - Mass Balance Study of Phuche and Khardung Glaciers, Ladakh Range: Impact on Downstream Water Availability and Atmospheric Pollutant Effect in a Changing Climate, Research Project, Duration: 24 months, Funding: >10 lakhs, Sponsored by: National Institute of Hydrology, Outcome: Glacier Mass Balance Assessment and Climate Impact Analysis (Ongoing)."
+  ],
+  "service": [
+    "Officer-in-Charge (O.C.), Remote Sensing & GIS Laboratory, NIH-WHRC, Jammu - Managed geospatial laboratory infrastructure, software resources, data processing facilities, and technical support for research and training activities.",
+    "Officer-in-Charge (O.C.), Rajbhasha (Official Language), NIH-WHRC, Jammu - Coordinated implementation of Rajbhasha policies and organized official language promotion activities.",
+    "GeM Secondary User, NIH-WHRC, Jammu - Assisted in procurement and purchase processes through the Government e-Marketplace (GeM) portal.",
+    "Deputy Officer-in-Charge (Dy. O.C.), Glacier Field Station, South Pullu, Ladakh - Assisted in management of field station operations, scientific instruments, and glacier monitoring activities.",
+    "Officer-in-Charge (O.C.), Generator, NIH-WHRC, Jammu - Oversaw operation, maintenance, and uninterrupted power backup support for the Centre.",
+    "Nodal Officer, Implementation of ET-Based Irrigation Performance Assessment Tool (CWC-NIH) - Coordinated implementation activities for Jammu & Kashmir and Himachal Pradesh.",
+    "Nodal Officer, Swachhata Hi Seva (SHS-2025) - Coordinated cleanliness and awareness activities under the national campaign.",
+    "Nodal Officer, Swachhata Pakhwada-2026 - Coordinated planning and execution of Swachhata Pakhwada activities at NIH-WHRC"
+  ],
+  "guidance": [
+    "Co-supervised Mr. Deepanshu Sahu (M. Tech., Geoinformatics, SGVU) on “Spatio-Temporal Analysis of Wetland Suitability for Migratory Birds in Keoladeo National Park using Geospatial Techniques.”",
+    "Co-supervised Mr. Vishnu Sharma (M. Tech., Geoinformatics, SGVU) on “Spatio-Temporal Flood Hazard Zonation in Gujarat Using Remote Sensing and AHP-Based Multi-Criteria Analysis.”",
+    "Co-supervised Mr. Akshay Kumar (M.A., Geography, CU Uttarakhand) on “Comparative Analysis of Glacial Lake Outburst Flood Modeling for Kedartal and Padam Lake Using Remote Sensing and Geospatial Techniques.”"
+  ],
+  "fieldwork": [
+    "06-09 August 2024 - Conducted field investigations in the Lidder and Sind catchments of the Upper Jhelum Basin, Jammu & Kashmir.",
+    "19-29 July 2024 - Participated in glaciological field investigations on Phuche and Khardung glaciers, Leh-Ladakh, for glacier mass balance and cryosphere monitoring studies.",
+    "05-20 October 2024 - Conducted glacier field surveys on Phuche and Khardung glaciers, Ladakh, including retrieval of meteorological sensors and ground temperature loggers.",
+    "14-28 July 2025 - Participated in a high-altitude glaciological field campaign on Phuche and Khardung glaciers in the Ganglas catchment, Leh District, Ladakh, for mass balance and hydrometeorological observations.",
+    "12-17 October 2025 - Undertook field investigations at the South Pullu Glacier Field Station and the Khardung-Phuche glacier catchments, Ladakh, for glacier monitoring and field instrumentation activities."
+  ],
+  "webapps": [
+    "HIMCHITRA -A cloud-based portal for operational snow cover mapping, terrain analysis, and weather monitoring in the Western Himalaya using Google Earth Engine.",
+    "Flood Mapping and Monitoring Web Tool -Cloud-based application for near-real-time flood mapping using Sentinel-1 SAR and optical satellite datasets.",
+    "CSV-to-Shapefile Converter and GIS Utility Tools -Web-based geospatial data processing utilities.",
+    "Water Quality Assessment Dashboard -Satellite-based water quality monitoring tool utilizing Sentinel-2 datasets."
+  ],
+  "memberships": [
+    "Member, Technical Advisory Committee (TAC) for projects related to Mitigation of Floods (Riverine) and Erosion (Riverine and Coastal) under the National Disaster Mitigation Fund (NDMF).",
+    "Member, Committee for Landslide Risk Mitigation in the Union Territory of Jammu & Kashmir.",
+    "Individual Member, International Society for Photogrammetry and Remote Sensing (ISPRS) Student Consortium.",
+    "Life Member, Indian Society of Remote Sensing (ISRS)."
+  ],
+  "references": [
+    "Dr. Riyaz Ahmad Mir, Sc-C and In-charge, NIH-Western Himalayan Regional Centre Jammu, Mail Id: riyazmir.nihr@gov.in ",
+    "Prof. M. L. Kansal., Department of Water Resources Development and Management, IIT Roorkee, Mail id: mlk@wr.iitr.ac.in",
+    "Dr. P. K. Thakur, Scientist/Engineer – SG & Group Head, IIRS, ISRO, Water Resources Department, Mail id: wrd_office@iirs.gov.in"
+  ]
+}

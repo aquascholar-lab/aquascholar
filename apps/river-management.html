@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>River Management: National Water Resource</title>
+    <link rel="stylesheet" href="vendor/fontawesome/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-bottom: 5px solid #2a9d8f;
+        }
+        
+        h1 {
+            color: #1d3557;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            color: #457b9d;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        .game-intro {
+            max-width: 900px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .main-board {
+            flex: 3;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .controls-panel {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .panel-title {
+            color: #1d3557;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2a9d8f;
+        }
+        
+        .river-map {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .river-tile {
+            height: 120px;
+            background: #a8dadc;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+        }
+        
+        .river-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .river-tile.selected {
+            border-color: #e63946;
+        }
+        
+        .tile-icon {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #1d3557;
+        }
+        
+        .tile-name {
+            font-weight: bold;
+            font-size: 1rem;
+            text-align: center;
+            padding: 0 5px;
+        }
+        
+        .tile-stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 10px;
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .quality-indicator {
+            color: #2a9d8f;
+        }
+        
+        .disaster-indicator {
+            color: #e63946;
+        }
+        
+        .satellite-view {
+            background: #1d3557;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .satellite-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .satellite-title i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+            color: #4cc9f0;
+        }
+        
+        .satellite-data {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .data-item {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 10px;
+            margin: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .resource-panel {
+            margin-bottom: 25px;
+        }
+        
+        .resources {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .resource {
+            flex: 1;
+            min-width: 120px;
+            background: #f1faee;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .resource-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1d3557;
+            margin: 5px 0;
+        }
+        
+        .resource-name {
+            font-size: 0.9rem;
+            color: #457b9d;
+        }
+        
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #2a9d8f;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .action-btn:hover {
+            background: #1d7879;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .action-btn.disaster {
+            background: #e63946;
+        }
+        
+        .action-btn.disaster:hover {
+            background: #d00000;
+        }
+        
+        .event-log {
+            margin-top: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .log-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #1d3557;
+        }
+        
+        .log-entry {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-entry.disaster {
+            color: #e63946;
+            font-weight: bold;
+        }
+        
+        .log-entry.improvement {
+            color: #2a9d8f;
+        }
+        
+        .log-entry.satellite {
+            color: #4a4e9c;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        .game-status {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .status-item {
+            text-align: center;
+        }
+        
+        .status-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1d3557;
+        }
+        
+        .status-label {
+            font-size: 0.9rem;
+            color: #457b9d;
+        }
+        
+        /* End Game Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title.victory {
+            color: #2a9d8f;
+        }
+        
+        .modal-title.defeat {
+            color: #e63946;
+        }
+        
+        .modal-message {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .stat-item {
+            background: #f1faee;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1d3557;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #457b9d;
+        }
+        
+        .restart-btn {
+            background: #2a9d8f;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            background: #1d7879;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .objectives-panel {
+            background: #f1faee;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+        }
+        
+        .objectives-list {
+            list-style-type: none;
+        }
+        
+        .objective {
+            padding: 10px;
+            border-bottom: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+        }
+        
+        .objective:last-child {
+            border-bottom: none;
+        }
+        
+        .objective-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .objective.completed {
+            color: #2a9d8f;
+        }
+        
+        .objective.failed {
+            color: #e63946;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #2a9d8f;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-fill.warning {
+            background: #f4a261;
+        }
+        
+        .progress-fill.danger {
+            background: #e63946;
+        }
+        
+        @media (max-width: 1100px) {
+            .game-area {
+                flex-direction: column;
+            }
+            
+            .river-map {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .river-map {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .quality-bad { color: #e63946; }
+        .quality-fair { color: #f4a261; }
+        .quality-good { color: #2a9d8f; }
+        .quality-excellent { color: #1d3557; }
+        
+        .game-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            border-radius: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .critical {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); }
+        }
+    </style>
+<link rel="stylesheet" href="migration.css"></head>
+<body>
+<a class="aquascholar-return" href="../index.html#webtools">← Aquascholar tools</a>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-water"></i> River Management Game</h1>
+            <div class="subtitle">Our National Water Resource: Balance water quality, disasters, and resource allocation</div>
+            <p class="game-intro">Manage 5 river segments across the nation. Use satellite imagery to monitor water quality, respond to disasters, and allocate resources effectively. Complete objectives within 10 years to win!</p>
+        </header>
+        
+        <div class="game-status">
+            <div class="status-item">
+                <div class="status-value" id="year">Year 1</div>
+                <div class="status-label">Time Remaining: <span id="years-remaining">10</span> years</div>
+            </div>
+            <div class="status-item">
+                <div class="status-value" id="score">850</div>
+                <div class="status-label">National River Health Index</div>
+            </div>
+            <div class="status-item">
+                <div class="status-value" id="turn">Turn 1/50</div>
+                <div class="status-label">Total Turns</div>
+            </div>
+        </div>
+        
+        <!-- Progress bars for key metrics -->
+        <div class="game-status">
+            <div class="status-item">
+                <div>National Water Quality</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quality-progress" style="width: 72%"></div>
+                </div>
+                <div class="status-label" id="quality-status">72% - Good</div>
+            </div>
+            <div class="status-item">
+                <div>Disaster Control</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="disaster-progress" style="width: 80%"></div>
+                </div>
+                <div class="status-label" id="disaster-status">Under Control</div>
+            </div>
+            <div class="status-item">
+                <div>Budget Health</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="budget-progress" style="width: 100%"></div>
+                </div>
+                <div class="status-label" id="budget-status">$5,000 - Healthy</div>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <div class="main-board">
+                <h2 class="panel-title"><i class="fas fa-map"></i> River System Map</h2>
+                
+                <div class="river-map" id="riverMap">
+                    <!-- River tiles will be generated by JavaScript -->
+                </div>
+                
+                <div class="satellite-view">
+                    <div class="satellite-title">
+                        <i class="fas fa-satellite"></i> Satellite Imagery Analysis
+                    </div>
+                    <div class="satellite-data" id="satelliteData">
+                        <!-- Satellite data will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="objectives-panel">
+                    <h3 class="log-title"><i class="fas fa-flag-checkered"></i> National River Management Objectives</h3>
+                    <ul class="objectives-list" id="objectivesList">
+                        <!-- Objectives will be populated by JavaScript -->
+                    </ul>
+                </div>
+                
+                <div class="event-log">
+                    <div class="log-title"><i class="fas fa-clipboard-list"></i> Event Log</div>
+                    <div id="eventLog">
+                        <div class="log-entry">Game started. Welcome to River Management!</div>
+                        <div class="log-entry">Satellite imagery shows normal conditions across all river segments.</div>
+                        <div class="log-entry">You have 10 years to complete national river management objectives.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls-panel">
+                <h2 class="panel-title"><i class="fas fa-tools"></i> Resources & Controls</h2>
+                
+                <div class="resource-panel">
+                    <div class="resources">
+                        <div class="resource">
+                            <div class="resource-value" id="budget">$5,000</div>
+                            <div class="resource-name">National Budget</div>
+                        </div>
+                        <div class="resource">
+                            <div class="resource-value" id="water-quality">72%</div>
+                            <div class="resource-name">Avg. Water Quality</div>
+                        </div>
+                        <div class="resource">
+                            <div class="resource-value" id="satellite-scans">3</div>
+                            <div class="resource-name">Satellite Scans</div>
+                        </div>
+                        <div class="resource">
+                            <div class="resource-value" id="disaster-count">0</div>
+                            <div class="resource-name">Active Disasters</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="action-btn" id="satelliteScanBtn">
+                        <i class="fas fa-satellite-dish"></i> Use Satellite Scan ($500)
+                    </button>
+                    
+                    <button class="action-btn" id="improveQualityBtn">
+                        <i class="fas fa-hand-holding-water"></i> Improve Water Quality ($800)
+                    </button>
+                    
+                    <button class="action-btn" id="allocateWaterBtn">
+                        <i class="fas fa-tint"></i> Allocate Water Resources ($600)
+                    </button>
+                    
+                    <button class="action-btn disaster" id="disasterResponseBtn">
+                        <i class="fas fa-exclamation-triangle"></i> Disaster Response ($1,200)
+                    </button>
+                    
+                    <button class="action-btn" id="nextTurnBtn">
+                        <i class="fas fa-forward"></i> Advance to Next Turn
+                    </button>
+                </div>
+                
+                <div class="event-log" style="margin-top: 25px;">
+                    <div class="log-title"><i class="fas fa-info-circle"></i> How The Game Ends</div>
+                    <div style="font-size: 0.9rem; line-height: 1.5;">
+                        <p><strong>Victory Conditions:</strong></p>
+                        <p>1. Complete all 3 objectives within 10 years</p>
+                        <p>2. Maintain minimum 60% average water quality</p>
+                        <p>3. Keep budget above $0</p>
+                        <p><strong>Defeat Conditions:</strong></p>
+                        <p>1. Water quality drops below 30% (Ecological Collapse)</p>
+                        <p>2. Budget reaches $0 (Bankruptcy)</p>
+                        <p>3. More than 3 simultaneous disasters (National Crisis)</p>
+                        <p>4. Time runs out (10 years elapsed)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>River Management Game | Educational Game on National Water Resources | Satellite Imagery Concepts</p>
+            <p>Manage water quality, respond to disasters, and allocate resources effectively to preserve our rivers.</p>
+        </footer>
+    </div>
+
+    <!-- End Game Modal -->
+    <div class="modal-overlay" id="endGameModal">
+        <div class="modal-content">
+            <h2 class="modal-title victory" id="endGameTitle">Victory!</h2>
+            <h2 class="modal-title defeat" id="endGameTitleDefeat" style="display: none;">Game Over</h2>
+            
+            <div class="modal-message" id="endGameMessage">
+                You have successfully managed the national river system!
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="finalScore">0</div>
+                    <div class="stat-label">Final Score</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="finalYears">0</div>
+                    <div class="stat-label">Years Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="finalQuality">0%</div>
+                    <div class="stat-label">Water Quality</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="finalBudget">$0</div>
+                    <div class="stat-label">Remaining Budget</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="disastersResolved">0</div>
+                    <div class="stat-label">Disasters Resolved</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="satellitesUsed">0</div>
+                    <div class="stat-label">Satellite Scans Used</div>
+                </div>
+            </div>
+            
+            <div id="victoryConditions" style="margin-top: 20px; text-align: left;">
+                <h3 style="color: #1d3557; margin-bottom: 10px;">Objectives Status:</h3>
+                <ul id="finalObjectives" style="list-style-type: none;"></ul>
+            </div>
+            
+            <button class="restart-btn" id="restartGameBtn">
+                <i class="fas fa-redo"></i> Play Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            currentYear: 1,
+            currentTurn: 1,
+            maxTurns: 50, // 10 years * 5 turns per year
+            score: 850,
+            budget: 5000,
+            satelliteScans: 3,
+            selectedRiver: null,
+            rivers: [],
+            eventLog: [],
+            avgWaterQuality: 72,
+            disastersResolved: 0,
+            satellitesUsed: 0,
+            gameActive: true,
+            
+            // Objectives
+            objectives: [
+                { id: 1, description: "Achieve 80% average water quality", completed: false, target: 80, current: 72, type: "quality" },
+                { id: 2, description: "Resolve at least 5 disasters", completed: false, target: 5, current: 0, type: "disaster" },
+                { id: 3, description: "Maintain budget above $2,000", completed: false, target: 2000, current: 5000, type: "budget" }
+            ],
+            
+            // Victory/Defeat conditions
+            victoryConditions: {
+                minQuality: 60, // Minimum average quality to win
+                maxActiveDisasters: 3, // Max simultaneous disasters
+                minBudget: 0 // Minimum budget (0 = bankruptcy)
+            },
+            
+            // Defeat thresholds
+            defeatConditions: {
+                qualityCollapse: 30, // Quality below this = immediate loss
+                bankruptcy: 0, // Budget at or below this = immediate loss
+                disasterCrisis: 4 // More than this many simultaneous disasters = immediate loss
+            }
+        };
+
+        // River data structure
+        const riverNames = [
+            "Ganga River", "Yamuna River", "Brahmaputra", "Krishna River", "Godavari River",
+            "Narmada River", "Kaveri River", "Mahanadi River", "Sutlej River", "Chenab River"
+        ];
+
+        const disasterTypes = [
+            { name: "Flood", icon: "fas fa-water", severity: "high", impact: -15 },
+            { name: "Drought", icon: "fas fa-sun", severity: "medium", impact: -10 },
+            { name: "Pollution", icon: "fas fa-smog", severity: "medium", impact: -12 },
+            { name: "Industrial Waste", icon: "fas fa-industry", severity: "high", impact: -20 },
+            { name: "Algal Bloom", icon: "fas fa-leaf", severity: "low", impact: -8 }
+        ];
+
+        // Initialize the game
+        function initGame() {
+            createRiverTiles();
+            updateObjectivesDisplay();
+            updateUI();
+            updateProgressBars();
+            addEventToLog("Game initialized. Manage your rivers carefully!", "normal");
+            addEventToLog(`You have ${10 - gameState.currentYear + 1} years to complete national objectives.`, "normal");
+        }
+
+        // Create river tiles
+        function createRiverTiles() {
+            const riverMap = document.getElementById('riverMap');
+            riverMap.innerHTML = '';
+            
+            // Create 5 river tiles for the game
+            for (let i = 0; i < 5; i++) {
+                const river = {
+                    id: i,
+                    name: riverNames[i],
+                    quality: Math.floor(Math.random() * 30) + 60, // 60-90%
+                    disaster: null,
+                    hasDisaster: Math.random() > 0.7,
+                    satelliteData: {
+                        temperature: (Math.random() * 10 + 20).toFixed(1),
+                        pollutionLevel: (Math.random() * 40 + 10).toFixed(1),
+                        waterFlow: (Math.random() * 50 + 50).toFixed(1)
+                    }
+                };
+                
+                // Add disaster if needed
+                if (river.hasDisaster) {
+                    const disaster = disasterTypes[Math.floor(Math.random() * disasterTypes.length)];
+                    river.disaster = disaster;
+                    addEventToLog(`Disaster alert: ${disaster.name} detected in ${river.name}!`, "disaster");
+                }
+                
+                gameState.rivers.push(river);
+                
+                // Create tile element
+                const tile = document.createElement('div');
+                tile.className = 'river-tile';
+                tile.dataset.id = i;
+                
+                // Add overlay for critical status
+                const overlay = document.createElement('div');
+                overlay.className = 'game-overlay';
+                overlay.id = `overlay-${i}`;
+                overlay.innerHTML = `<i class="fas fa-exclamation-triangle fa-2x"></i><p>CRITICAL</p>`;
+                overlay.style.display = 'none';
+                
+                // Determine quality color
+                let qualityClass = "quality-excellent";
+                if (river.quality < 60) qualityClass = "quality-bad";
+                else if (river.quality < 70) qualityClass = "quality-fair";
+                else if (river.quality < 80) qualityClass = "quality-good";
+                
+                tile.innerHTML = `
+                    <div class="tile-icon">
+                        ${river.hasDisaster ? `<i class="${river.disaster.icon}"></i>` : '<i class="fas fa-water"></i>'}
+                    </div>
+                    <div class="tile-name">${river.name}</div>
+                    <div class="tile-stats">
+                        <div class="quality-indicator ${qualityClass}">
+                            <i class="fas fa-tint"></i> ${river.quality}%
+                        </div>
+                        <div class="disaster-indicator">
+                            ${river.hasDisaster ? '<i class="fas fa-exclamation-triangle"></i>' : '<i class="fas fa-check"></i>'}
+                        </div>
+                    </div>
+                `;
+                
+                tile.appendChild(overlay);
+                tile.addEventListener('click', () => selectRiver(i));
+                riverMap.appendChild(tile);
+                
+                // Add critical animation if quality is very low
+                if (river.quality < 40) {
+                    tile.classList.add('critical');
+                    overlay.style.display = 'flex';
+                }
+            }
+            
+            // Calculate average water quality
+            calculateAvgWaterQuality();
+            updateActiveDisasters();
+        }
+
+        // Select a river
+        function selectRiver(id) {
+            if (!gameState.gameActive) return;
+            
+            gameState.selectedRiver = id;
+            
+            // Update UI
+            document.querySelectorAll('.river-tile').forEach(tile => {
+                tile.classList.remove('selected');
+            });
+            
+            document.querySelector(`.river-tile[data-id="${id}"]`).classList.add('selected');
+            
+            // Update satellite data display
+            updateSatelliteData(id);
+            
+            addEventToLog(`Selected ${gameState.rivers[id].name} for management.`, "normal");
+        }
+
+        // Update satellite data display
+        function updateSatelliteData(riverId) {
+            const satelliteData = document.getElementById('satelliteData');
+            const river = gameState.rivers[riverId];
+            
+            satelliteData.innerHTML = `
+                <div class="data-item">
+                    <div style="font-size: 1.8rem; color: #f4a261;">
+                        <i class="fas fa-thermometer-half"></i>
+                    </div>
+                    <div>${river.satelliteData.temperature}°C</div>
+                    <div style="font-size: 0.8rem;">Temperature</div>
+                </div>
+                <div class="data-item">
+                    <div style="font-size: 1.8rem; color: #e63946;">
+                        <i class="fas fa-skull-crossbones"></i>
+                    </div>
+                    <div>${river.satelliteData.pollutionLevel}%</div>
+                    <div style="font-size: 0.8rem;">Pollution Level</div>
+                </div>
+                <div class="data-item">
+                    <div style="font-size: 1.8rem; color: #4cc9f0;">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                    <div>${river.satelliteData.waterFlow} m³/s</div>
+                    <div style="font-size: 0.8rem;">Water Flow</div>
+                </div>
+                <div class="data-item">
+                    <div style="font-size: 1.8rem; color: ${river.quality < 70 ? '#e63946' : '#2a9d8f'};">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div>${river.quality}%</div>
+                    <div style="font-size: 0.8rem;">Water Quality</div>
+                </div>
+            `;
+        }
+
+        // Calculate average water quality
+        function calculateAvgWaterQuality() {
+            let totalQuality = 0;
+            gameState.rivers.forEach(river => {
+                totalQuality += river.quality;
+            });
+            
+            gameState.avgWaterQuality = Math.round(totalQuality / gameState.rivers.length);
+            document.getElementById('water-quality').textContent = `${gameState.avgWaterQuality}%`;
+            
+            // Update objective
+            gameState.objectives[0].current = gameState.avgWaterQuality;
+            if (gameState.avgWaterQuality >= gameState.objectives[0].target) {
+                gameState.objectives[0].completed = true;
+            }
+        }
+
+        // Update active disasters count
+        function updateActiveDisasters() {
+            const activeDisasters = gameState.rivers.filter(r => r.hasDisaster).length;
+            document.getElementById('disaster-count').textContent = activeDisasters;
+            
+            // Check for disaster crisis
+            if (activeDisasters >= gameState.defeatConditions.disasterCrisis) {
+                endGame(false, "National Crisis: Too many simultaneous disasters!");
+            }
+        }
+
+        // Update UI with current game state
+        function updateUI() {
+            document.getElementById('year').textContent = `Year ${gameState.currentYear}`;
+            document.getElementById('years-remaining').textContent = 10 - gameState.currentYear + 1;
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('turn').textContent = `Turn ${gameState.currentTurn}/${gameState.maxTurns}`;
+            document.getElementById('budget').textContent = `$${gameState.budget}`;
+            document.getElementById('satellite-scans').textContent = gameState.satelliteScans;
+            
+            // Update button states
+            document.getElementById('satelliteScanBtn').disabled = gameState.budget < 500 || gameState.satelliteScans <= 0 || !gameState.gameActive;
+            document.getElementById('improveQualityBtn').disabled = gameState.budget < 800 || gameState.selectedRiver === null || !gameState.gameActive;
+            document.getElementById('allocateWaterBtn').disabled = gameState.budget < 600 || gameState.selectedRiver === null || !gameState.gameActive;
+            document.getElementById('disasterResponseBtn').disabled = gameState.budget < 1200 || gameState.selectedRiver === null || !gameState.gameActive;
+            document.getElementById('nextTurnBtn').disabled = !gameState.gameActive;
+            
+            // Update progress bars
+            updateProgressBars();
+        }
+
+        // Update progress bars
+        function updateProgressBars() {
+            // Quality progress
+            const qualityProgress = document.getElementById('quality-progress');
+            let qualityWidth = gameState.avgWaterQuality;
+            let qualityStatus = "";
+            
+            if (gameState.avgWaterQuality >= 80) {
+                qualityStatus = "Excellent";
+                qualityProgress.className = "progress-fill";
+            } else if (gameState.avgWaterQuality >= 60) {
+                qualityStatus = "Good";
+                qualityProgress.className = "progress-fill";
+            } else if (gameState.avgWaterQuality >= 40) {
+                qualityStatus = "Fair";
+                qualityProgress.className = "progress-fill warning";
+            } else {
+                qualityStatus = "Critical";
+                qualityProgress.className = "progress-fill danger";
+            }
+            
+            qualityProgress.style.width = `${qualityWidth}%`;
+            document.getElementById('quality-status').textContent = `${gameState.avgWaterQuality}% - ${qualityStatus}`;
+            
+            // Disaster progress
+            const activeDisasters = gameState.rivers.filter(r => r.hasDisaster).length;
+            const disasterProgress = document.getElementById('disaster-progress');
+            const disasterWidth = 100 - (activeDisasters * 20); // Each disaster reduces by 20%
+            let disasterStatus = "";
+            
+            if (activeDisasters === 0) {
+                disasterStatus = "Under Control";
+                disasterProgress.className = "progress-fill";
+            } else if (activeDisasters <= 2) {
+                disasterStatus = `${activeDisasters} Active`;
+                disasterProgress.className = "progress-fill warning";
+            } else {
+                disasterStatus = `${activeDisasters} Active - Critical!`;
+                disasterProgress.className = "progress-fill danger";
+            }
+            
+            disasterProgress.style.width = `${disasterWidth}%`;
+            document.getElementById('disaster-status').textContent = disasterStatus;
+            
+            // Budget progress
+            const budgetProgress = document.getElementById('budget-progress');
+            const budgetWidth = Math.min(100, (gameState.budget / 5000) * 100); // Based on initial budget
+            let budgetStatus = "";
+            
+            if (gameState.budget >= 3000) {
+                budgetStatus = `$${gameState.budget} - Healthy`;
+                budgetProgress.className = "progress-fill";
+            } else if (gameState.budget >= 1000) {
+                budgetStatus = `$${gameState.budget} - Moderate`;
+                budgetProgress.className = "progress-fill warning";
+            } else {
+                budgetStatus = `$${gameState.budget} - Low`;
+                budgetProgress.className = "progress-fill danger";
+            }
+            
+            budgetProgress.style.width = `${budgetWidth}%`;
+            document.getElementById('budget-status').textContent = budgetStatus;
+        }
+
+        // Add event to log
+        function addEventToLog(message, type = "normal") {
+            const eventLog = document.getElementById('eventLog');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.textContent = `Year ${gameState.currentYear}, Turn ${gameState.currentTurn}: ${message}`;
+            
+            eventLog.prepend(logEntry);
+            
+            // Keep log to max 10 entries
+            const entries = eventLog.querySelectorAll('.log-entry');
+            if (entries.length > 10) {
+                entries[entries.length - 1].remove();
+            }
+        }
+
+        // Update objectives display
+        function updateObjectivesDisplay() {
+            const objectivesList = document.getElementById('objectivesList');
+            objectivesList.innerHTML = '';
+            
+            gameState.objectives.forEach(obj => {
+                const li = document.createElement('li');
+                li.className = `objective ${obj.completed ? 'completed' : ''}`;
+                
+                const icon = obj.completed ? 'fas fa-check-circle' : 'fas fa-circle';
+                li.innerHTML = `
+                    <i class="objective-icon ${icon}"></i>
+                    <span>${obj.description}</span>
+                    <span style="margin-left: auto; font-weight: bold;">${obj.current}/${obj.target}</span>
+                `;
+                
+                objectivesList.appendChild(li);
+            });
+        }
+
+        // Check game end conditions
+        function checkGameEnd() {
+            // Check for defeat conditions first
+            if (gameState.avgWaterQuality <= gameState.defeatConditions.qualityCollapse) {
+                endGame(false, "Ecological Collapse: National water quality has dropped below 30%!");
+                return true;
+            }
+            
+            if (gameState.budget <= gameState.defeatConditions.bankruptcy) {
+                endGame(false, "Bankruptcy: National budget has been exhausted!");
+                return true;
+            }
+            
+            const activeDisasters = gameState.rivers.filter(r => r.hasDisaster).length;
+            if (activeDisasters >= gameState.defeatConditions.disasterCrisis) {
+                endGame(false, "National Crisis: Too many simultaneous disasters!");
+                return true;
+            }
+            
+            // Check for victory by time
+            if (gameState.currentTurn >= gameState.maxTurns) {
+                // Check if victory conditions are met
+                const allObjectivesComplete = gameState.objectives.every(obj => obj.completed);
+                const qualityMet = gameState.avgWaterQuality >= gameState.victoryConditions.minQuality;
+                const budgetMet = gameState.budget > gameState.victoryConditions.minBudget;
+                const disasterMet = activeDisasters <= gameState.victoryConditions.maxActiveDisasters;
+                
+                if (allObjectivesComplete && qualityMet && budgetMet && disasterMet) {
+                    endGame(true, "Congratulations! You have successfully managed the national river system for 10 years!");
+                } else {
+                    endGame(false, "Time's up! You failed to complete the national river management objectives within 10 years.");
+                }
+                return true;
+            }
+            
+            // Check for early victory (all objectives completed before time runs out)
+            const allObjectivesComplete = gameState.objectives.every(obj => obj.completed);
+            if (allObjectivesComplete && gameState.currentYear >= 5) { // At least 5 years in
+                const qualityMet = gameState.avgWaterQuality >= gameState.victoryConditions.minQuality;
+                const budgetMet = gameState.budget > gameState.victoryConditions.minBudget;
+                const disasterMet = activeDisasters <= gameState.victoryConditions.maxActiveDisasters;
+                
+                if (qualityMet && budgetMet && disasterMet) {
+                    endGame(true, "Outstanding! You completed all national objectives ahead of schedule!");
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        // End game function
+        function endGame(victory, message) {
+            gameState.gameActive = false;
+            
+            // Update final statistics
+            document.getElementById('finalScore').textContent = gameState.score;
+            document.getElementById('finalYears').textContent = gameState.currentYear;
+            document.getElementById('finalQuality').textContent = `${gameState.avgWaterQuality}%`;
+            document.getElementById('finalBudget').textContent = `$${gameState.budget}`;
+            document.getElementById('disastersResolved').textContent = gameState.disastersResolved;
+            document.getElementById('satellitesUsed').textContent = gameState.satellitesUsed;
+            
+            // Show appropriate title
+            if (victory) {
+                document.getElementById('endGameTitle').style.display = 'block';
+                document.getElementById('endGameTitleDefeat').style.display = 'none';
+            } else {
+                document.getElementById('endGameTitle').style.display = 'none';
+                document.getElementById('endGameTitleDefeat').style.display = 'block';
+            }
+            
+            // Update message
+            document.getElementById('endGameMessage').textContent = message;
+            
+            // Update final objectives status
+            const finalObjectives = document.getElementById('finalObjectives');
+            finalObjectives.innerHTML = '';
+            
+            gameState.objectives.forEach(obj => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '8px';
+                li.innerHTML = `
+                    <i class="fas ${obj.completed ? 'fa-check-circle' : 'fa-times-circle'}" 
+                       style="color: ${obj.completed ? '#2a9d8f' : '#e63946'}; margin-right: 8px;"></i>
+                    ${obj.description} - ${obj.completed ? 'Completed' : 'Failed'}
+                `;
+                finalObjectives.appendChild(li);
+            });
+            
+            // Add victory condition status
+            const activeDisasters = gameState.rivers.filter(r => r.hasDisaster).length;
+            const li1 = document.createElement('li');
+            li1.style.marginBottom = '8px';
+            li1.innerHTML = `
+                <i class="fas ${gameState.avgWaterQuality >= gameState.victoryConditions.minQuality ? 'fa-check-circle' : 'fa-times-circle'}" 
+                   style="color: ${gameState.avgWaterQuality >= gameState.victoryConditions.minQuality ? '#2a9d8f' : '#e63946'}; margin-right: 8px;"></i>
+                Minimum 60% water quality: ${gameState.avgWaterQuality}%
+            `;
+            finalObjectives.appendChild(li1);
+            
+            const li2 = document.createElement('li');
+            li2.style.marginBottom = '8px';
+            li2.innerHTML = `
+                <i class="fas ${activeDisasters <= gameState.victoryConditions.maxActiveDisasters ? 'fa-check-circle' : 'fa-times-circle'}" 
+                   style="color: ${activeDisasters <= gameState.victoryConditions.maxActiveDisasters ? '#2a9d8f' : '#e63946'}; margin-right: 8px;"></i>
+                Disaster control (max 3): ${activeDisasters} active
+            `;
+            finalObjectives.appendChild(li2);
+            
+            const li3 = document.createElement('li');
+            li3.style.marginBottom = '8px';
+            li3.innerHTML = `
+                <i class="fas ${gameState.budget > gameState.victoryConditions.minBudget ? 'fa-check-circle' : 'fa-times-circle'}" 
+                   style="color: ${gameState.budget > gameState.victoryConditions.minBudget ? '#2a9d8f' : '#e63946'}; margin-right: 8px;"></i>
+                Budget above $0: $${gameState.budget}
+            `;
+            finalObjectives.appendChild(li3);
+            
+            // Show modal
+            document.getElementById('endGameModal').style.display = 'flex';
+            
+            // Add event to log
+            addEventToLog(victory ? "VICTORY ACHIEVED!" : "GAME OVER: " + message, victory ? "improvement" : "disaster");
+        }
+
+        // Satellite scan action
+        function satelliteScan() {
+            if (!gameState.gameActive) return;
+            if (gameState.budget < 500 || gameState.satelliteScans <= 0) return;
+            
+            gameState.budget -= 500;
+            gameState.satelliteScans--;
+            gameState.satellitesUsed++;
+            
+            // Reveal more detailed data for all rivers
+            gameState.rivers.forEach(river => {
+                river.satelliteData.pollutionLevel = (Math.random() * 50).toFixed(1);
+                river.satelliteData.temperature = (Math.random() * 15 + 15).toFixed(1);
+            });
+            
+            if (gameState.selectedRiver !== null) {
+                updateSatelliteData(gameState.selectedRiver);
+            }
+            
+            addEventToLog("Satellite scan completed. Detailed data available for all rivers.", "satellite");
+            updateUI();
+        }
+
+        // Improve water quality action
+        function improveWaterQuality() {
+            if (!gameState.gameActive) return;
+            if (gameState.budget < 800 || gameState.selectedRiver === null) return;
+            
+            gameState.budget -= 800;
+            const river = gameState.rivers[gameState.selectedRiver];
+            
+            // Improve quality by 10-20%
+            const improvement = Math.floor(Math.random() * 11) + 10;
+            river.quality = Math.min(100, river.quality + improvement);
+            
+            // Update satellite data
+            river.satelliteData.pollutionLevel = Math.max(0, river.satelliteData.pollutionLevel - 15).toFixed(1);
+            
+            calculateAvgWaterQuality();
+            updateSatelliteData(gameState.selectedRiver);
+            addEventToLog(`Water quality improved by ${improvement}% in ${river.name}.`, "improvement");
+            updateUI();
+            updateRiverTiles();
+        }
+
+        // Allocate water resources action
+        function allocateWaterResources() {
+            if (!gameState.gameActive) return;
+            if (gameState.budget < 600 || gameState.selectedRiver === null) return;
+            
+            gameState.budget -= 600;
+            const river = gameState.rivers[gameState.selectedRiver];
+            
+            // Improve water flow
+            river.satelliteData.waterFlow = (parseFloat(river.satelliteData.waterFlow) + 20).toFixed(1);
+            
+            // Slight quality improvement
+            river.quality = Math.min(100, river.quality + 5);
+            
+            calculateAvgWaterQuality();
+            updateSatelliteData(gameState.selectedRiver);
+            addEventToLog(`Water resources allocated to ${river.name}. Flow increased.`, "improvement");
+            updateUI();
+            updateRiverTiles();
+        }
+
+        // Disaster response action
+        function disasterResponse() {
+            if (!gameState.gameActive) return;
+            if (gameState.budget < 1200 || gameState.selectedRiver === null) return;
+            
+            const river = gameState.rivers[gameState.selectedRiver];
+            
+            if (!river.hasDisaster) {
+                addEventToLog(`No active disaster in ${river.name}.`, "normal");
+                return;
+            }
+            
+            gameState.budget -= 1200;
+            
+            // Resolve disaster
+            river.hasDisaster = false;
+            river.disaster = null;
+            gameState.disastersResolved++;
+            
+            // Quality improves after disaster response
+            river.quality = Math.min(100, river.quality + 15);
+            
+            calculateAvgWaterQuality();
+            updateSatelliteData(gameState.selectedRiver);
+            addEventToLog(`Disaster response successful in ${river.name}.`, "improvement");
+            
+            // Update objective
+            gameState.objectives[1].current = gameState.disastersResolved;
+            if (gameState.disastersResolved >= gameState.objectives[1].target) {
+                gameState.objectives[1].completed = true;
+            }
+            
+            updateUI();
+            updateRiverTiles();
+            updateActiveDisasters();
+            updateObjectivesDisplay();
+        }
+
+        // Advance to next turn
+        function nextTurn() {
+            if (!gameState.gameActive) return;
+            
+            gameState.currentTurn++;
+            
+            // Every 5 turns, advance a year
+            if (gameState.currentTurn % 5 === 0) {
+                gameState.currentYear++;
+                addEventToLog(`Year ${gameState.currentYear} begins.`, "normal");
+                
+                // Annual budget allocation
+                gameState.budget += 1000;
+                addEventToLog("Annual budget allocation: $1,000 received.", "improvement");
+            }
+            
+            // Add satellite scans each turn
+            gameState.satelliteScans += 1;
+            
+            // Random events
+            randomEvents();
+            
+            // Update score based on river quality
+            updateScore();
+            
+            // Update budget objective
+            gameState.objectives[2].current = gameState.budget;
+            if (gameState.budget >= gameState.objectives[2].target) {
+                gameState.objectives[2].completed = true;
+            }
+            
+            // Update UI
+            updateUI();
+            updateRiverTiles();
+            updateObjectivesDisplay();
+            
+            addEventToLog(`Turn ${gameState.currentTurn} completed.`, "normal");
+            
+            // Check for game end
+            checkGameEnd();
+        }
+
+        // Random events that can occur each turn
+        function randomEvents() {
+            gameState.rivers.forEach(river => {
+                // Random quality changes
+                const change = Math.floor(Math.random() * 11) - 5; // -5 to +5
+                river.quality = Math.max(10, Math.min(100, river.quality + change));
+                
+                // Random disasters (higher chance if quality is low)
+                let disasterChance = 0.15; // Base chance
+                if (river.quality < 50) disasterChance = 0.35;
+                if (river.quality < 30) disasterChance = 0.5;
+                
+                if (Math.random() < disasterChance && !river.hasDisaster) {
+                    const disaster = disasterTypes[Math.floor(Math.random() * disasterTypes.length)];
+                    river.disaster = disaster;
+                    river.hasDisaster = true;
+                    river.quality = Math.max(10, river.quality + disaster.impact);
+                    addEventToLog(`Disaster: ${disaster.name} in ${river.name}!`, "disaster");
+                }
+                
+                // Random satellite data changes
+                river.satelliteData.temperature = (parseFloat(river.satelliteData.temperature) + (Math.random() * 2 - 1)).toFixed(1);
+                river.satelliteData.pollutionLevel = Math.max(0, parseFloat(river.satelliteData.pollutionLevel) + (Math.random() * 10 - 5)).toFixed(1);
+                river.satelliteData.waterFlow = Math.max(10, parseFloat(river.satelliteData.waterFlow) + (Math.random() * 20 - 10)).toFixed(1);
+            });
+            
+            calculateAvgWaterQuality();
+            updateActiveDisasters();
+            
+            if (gameState.selectedRiver !== null) {
+                updateSatelliteData(gameState.selectedRiver);
+            }
+        }
+
+        // Update score based on game state
+        function updateScore() {
+            let newScore = 500; // Base score
+            
+            // Add points for river quality
+            newScore += gameState.avgWaterQuality * 3;
+            
+            // Add points for budget
+            newScore += gameState.budget / 10;
+            
+            // Add points for resolved disasters
+            newScore += gameState.disastersResolved * 50;
+            
+            // Subtract points for active disasters
+            const disasterCount = gameState.rivers.filter(r => r.hasDisaster).length;
+            newScore -= disasterCount * 100;
+            
+            // Add points for completed objectives
+            const completedObjectives = gameState.objectives.filter(obj => obj.completed).length;
+            newScore += completedObjectives * 200;
+            
+            // Ensure score doesn't go below 0
+            gameState.score = Math.max(0, Math.floor(newScore));
+        }
+
+        // Update river tiles display
+        function updateRiverTiles() {
+            const riverTiles = document.querySelectorAll('.river-tile');
+            
+            riverTiles.forEach(tile => {
+                const id = parseInt(tile.dataset.id);
+                const river = gameState.rivers[id];
+                const overlay = document.getElementById(`overlay-${id}`);
+                
+                // Remove critical animation
+                tile.classList.remove('critical');
+                overlay.style.display = 'none';
+                
+                // Determine quality color
+                let qualityClass = "quality-excellent";
+                if (river.quality < 60) qualityClass = "quality-bad";
+                else if (river.quality < 70) qualityClass = "quality-fair";
+                else if (river.quality < 80) qualityClass = "quality-good";
+                
+                tile.innerHTML = `
+                    <div class="tile-icon">
+                        ${river.hasDisaster ? `<i class="${river.disaster.icon}"></i>` : '<i class="fas fa-water"></i>'}
+                    </div>
+                    <div class="tile-name">${river.name}</div>
+                    <div class="tile-stats">
+                        <div class="quality-indicator ${qualityClass}">
+                            <i class="fas fa-tint"></i> ${river.quality}%
+                        </div>
+                        <div class="disaster-indicator">
+                            ${river.hasDisaster ? '<i class="fas fa-exclamation-triangle"></i>' : '<i class="fas fa-check"></i>'}
+                        </div>
+                    </div>
+                `;
+                
+                // Add overlay back
+                tile.appendChild(overlay);
+                
+                // Add critical animation if quality is very low
+                if (river.quality < 40) {
+                    tile.classList.add('critical');
+                    overlay.style.display = 'flex';
+                }
+                
+                // Re-add click event
+                tile.addEventListener('click', () => selectRiver(id));
+            });
+        }
+
+        // Restart game
+        function restartGame() {
+            // Reset game state
+            gameState.currentYear = 1;
+            gameState.currentTurn = 1;
+            gameState.score = 850;
+            gameState.budget = 5000;
+            gameState.satelliteScans = 3;
+            gameState.selectedRiver = null;
+            gameState.rivers = [];
+            gameState.eventLog = [];
+            gameState.avgWaterQuality = 72;
+            gameState.disastersResolved = 0;
+            gameState.satellitesUsed = 0;
+            gameState.gameActive = true;
+            
+            // Reset objectives
+            gameState.objectives = [
+                { id: 1, description: "Achieve 80% average water quality", completed: false, target: 80, current: 72, type: "quality" },
+                { id: 2, description: "Resolve at least 5 disasters", completed: false, target: 5, current: 0, type: "disaster" },
+                { id: 3, description: "Maintain budget above $2,000", completed: false, target: 2000, current: 5000, type: "budget" }
+            ];
+            
+            // Clear event log
+            document.getElementById('eventLog').innerHTML = `
+                <div class="log-entry">Game started. Welcome to River Management!</div>
+                <div class="log-entry">Satellite imagery shows normal conditions across all river segments.</div>
+                <div class="log-entry">You have 10 years to complete national river management objectives.</div>
+            `;
+            
+            // Hide modal
+            document.getElementById('endGameModal').style.display = 'none';
+            
+            // Reinitialize game
+            initGame();
+        }
+
+        // Event Listeners
+        document.getElementById('satelliteScanBtn').addEventListener('click', satelliteScan);
+        document.getElementById('improveQualityBtn').addEventListener('click', improveWaterQuality);
+        document.getElementById('allocateWaterBtn').addEventListener('click', allocateWaterResources);
+        document.getElementById('disasterResponseBtn').addEventListener('click', disasterResponse);
+        document.getElementById('nextTurnBtn').addEventListener('click', nextTurn);
+        document.getElementById('restartGameBtn').addEventListener('click', restartGame);
+
+        // Initialize the game
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
