@@ -1,15 +1,56 @@
-Aquascholar — October 2026 update
+# Aquascholar
 
-Upload the contents of this folder to the website root. index.html is the entry page; all fonts, imagery and the October CV download are included locally.
+Personal academic portfolio of **Sachchidanand Singh**, Assistant Professor at the School of Civil and Environmental Engineering, Indian Institute of Technology Mandi.
 
-The supplied mountain campus image is the full-page background. A small scroll parallax provides depth and respects reduced-motion preferences. The supplied website's profile, research themes, education, experience, awards, publication filters, mobile menu and contact details are retained. Dates and appointment agree with the October 2026 CV.
+The website presents my research, publications, projects, student guidance, field experience, professional service, and web tools.
 
-Editable additions: campus.css controls the photographic treatment, campus-motion.js controls the restrained parallax, and portfolio.js contains the supplied compiled React application adapted for this background. The source ZIP contained production bundles rather than the original React project source.
+## Research interests
 
-Checks: desktop 1440 × 1000 and mobile 390 × 844; image loaded; no horizontal mobile overflow; publication filtering; mobile navigation closes after selection; local CV returns HTTP 200; reduced-motion disables background movement; no browser script errors.
+- Snow, glaciers, and cryosphere monitoring
+- Hydrological and hydraulic modelling
+- Flood, flash-flood, and glacial lake outburst flood assessment
+- Landslide susceptibility and risk modelling
+- Remote sensing, GIS, and Google Earth Engine
+- Climate change and water resources management
 
-Rainfall update: a lightweight canvas layer adds depth through varied drop speeds and opacity. The Pause rain control stops the effect. Rain stops when the tab is hidden and is disabled for reduced-motion preferences. Verified drawing, pause/resume, reduced motion and phone layout without script errors.
+## Website features
 
-Full CV update: added nine research areas, eight projects, eight administrative responsibilities, four memberships, three supervised students, five field campaigns and academic references. Publication totals updated to 16 international journals and 14 book/conference chapters. The downloadable document is the newly supplied full October CV.
+- Mountain landscape background with animated rainfall
+- Responsive layouts for desktop and mobile
+- Publication filtering
+- Downloadable full October 2026 CV
+- Research applications and locally hosted browser tools
+- Rainfall pause control and reduced-motion support
 
-Web tools: four institutional research products are listed with email enquiries according to the CV's non-public access status. Four previously shared Earth Engine links are restored as external applications; their server-side operation depends on their host. Four saved browser tools and their dependencies are included locally. Return navigation goes to this portfolio's Web tools section.
+## Files
+
+- `index.html` — website entry page
+- `portfolio.js` — portfolio content and interactions
+- `campus.css` — landscape styling and layout adjustments
+- `campus-motion.js` — background scroll movement
+- `rainfall.js` — rainfall animation and controls
+- `assets/` — background image and downloadable CV
+- `apps/` — locally hosted browser tools
+
+Keep the supplied fonts, stylesheets, and other supporting files in their original locations.
+
+## Hosting
+
+This is a static website. Upload the website files and folders to the hosting root, keeping `index.html` at the top level.
+
+For GitHub Pages, select the appropriate publishing branch and folder under **Settings → Pages**.
+
+## Web-tool access
+
+Institutional research applications listed in the CV are not currently available in the public domain. Contact me for research enquiries.
+
+External Earth Engine applications depend on their respective hosting services. Locally hosted browser tools are included in the `apps/` folder.
+
+## Contact
+
+**Sachchidanand Singh**  
+Assistant Professor  
+School of Civil and Environmental Engineering  
+Indian Institute of Technology Mandi  
+
+Email: **sachchidanand@iitmandi.ac.in**
